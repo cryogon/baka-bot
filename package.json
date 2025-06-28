@@ -1,16 +1,20 @@
 {
-  "name": "baka-bot",
-  "module": "index.ts",
-  "type": "module",
-  "private": true,
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  },
-  "dependencies": {
-    "discord.js": "^14.21.0",
-    "osu": "^3.0.0-0"
-  }
+    "name": "baka-bot",
+    "module": "index.ts",
+    "type": "module",
+    "private": true,
+    "scripts": {
+        "start": "bun run src/index.ts",
+        "deploy:commands": "bun run src/deploy-discord-commands.ts"
+    },
+    "devDependencies": {
+        "@types/bun": "latest"
+    },
+    "peerDependencies": {
+        "typescript": "^5"
+    },
+    "dependencies": {
+        "discord.js": "^14.21.0",
+        "osu": "^3.0.0-0"
+    }
 }
