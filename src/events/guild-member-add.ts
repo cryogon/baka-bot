@@ -1,7 +1,4 @@
 import {
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
   EmbedBuilder,
   Events,
   GuildMember,
@@ -83,7 +80,7 @@ async function sendVerificationMessage(
   const embed = new EmbedBuilder()
     .setTitle("🛡️ Welcome! Please Verify Yourself")
     .setDescription(
-      `Welcome to **${member.guild.name}**, ${member.user}!\n\nTo access all channels, please click the button below to verify yourself.`
+      `Welcome to **${member.guild.name}**, ${member.user}!\n\nTo access all channels, use \`/link\` command to link your osu profile`
     )
     .setColor(0x3498db)
     .setThumbnail(member.user.displayAvatarURL())
@@ -93,16 +90,8 @@ async function sendVerificationMessage(
       iconURL: member.guild.iconURL() || undefined,
     });
 
-  const verifyButton = new ButtonBuilder()
-    .setCustomId("verify_user")
-    .setLabel("✅ Verify Me")
-    .setStyle(ButtonStyle.Success);
-
-  const row = new ActionRowBuilder<ButtonBuilder>().addComponents(verifyButton);
-
   await verificationChannel.send({
     content: `${member.user}`,
     embeds: [embed],
-    components: [row],
   });
 }

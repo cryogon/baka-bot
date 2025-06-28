@@ -15,6 +15,6 @@
     },
     "dependencies": {
         "discord.js": "^14.21.0",
-        "osu": "^3.0.0-0"
+        "node-osu": "^2.2.1"
     }
 }
