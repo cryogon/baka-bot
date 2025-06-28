@@ -1,5 +1,18 @@
 # Dirs
 node_modules
+logs
+out
+dist
+
 # Files
+## Env Files
 .env
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+## Temp Files
 server-config.json
+# Finder (MacOS) folder config
+.DS_Store
