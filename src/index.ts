@@ -39,38 +39,20 @@ for (const folder of commandFolders) {
   }
 }
 
-// handle commands and button interactions
-client.on(Events.InteractionCreate, async (interaction) => {
-  if (interaction.isButton()) {
-    console.log("I'm button");
-    return;
-  }
+// register event handlers
+const eventsPath = path.join(__dirname, 'events');
+const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.ts'));
 
-  if (!interaction.isChatInputCommand()) return;
+for (const file of eventFiles) {
+	const filePath = path.join(eventsPath, file);
+	const event = require(filePath);
+	if (event.once) {
+		client.once(event.name, (...args) => event.execute(...args));
+	} else {
+		client.on(event.name, (...args) => event.execute(...args));
+	}
+}
 
-  const command: any = state.getDiscordCommand(interaction.commandName);
-  if (!command) {
-    console.error(`No command matching ${interaction.commandName} was found.`);
-    return;
-  }
-
-  try {
-    await command.execute(interaction);
-  } catch (error) {
-    console.error(error);
-    if (interaction.replied || interaction.deferred) {
-      await interaction.followUp({
-        content: "There was an error while executing this command!",
-        flags: MessageFlags.Ephemeral,
-      });
-    } else {
-      await interaction.reply({
-        content: "There was an error while executing this command!",
-        flags: MessageFlags.Ephemeral,
-      });
-    }
-  }
-});
 
 // Log in to Discord with your client's token
 await client.login(process.env.DISCORD_TOKEN);

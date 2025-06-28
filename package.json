@@ -10,6 +10,7 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "discord.js": "^14.21.0"
+    "discord.js": "^14.21.0",
+    "osu": "^3.0.0-0"
   }
 }
