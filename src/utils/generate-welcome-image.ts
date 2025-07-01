@@ -222,7 +222,7 @@ export async function generateWelcomeCard(
     "bold"
   );
   drawTextWithShadow(
-    "DISCORD",
+    "Discord",
     leftProfileX + profileRadius,
     platformY,
     12,
@@ -240,7 +240,7 @@ export async function generateWelcomeCard(
     "bold"
   );
   drawTextWithShadow(
-    "OSU!",
+    "osu!",
     rightProfileX + profileRadius,
     platformY,
     12,
