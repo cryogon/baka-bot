@@ -1,4 +1,4 @@
-import { createCanvas, loadImage} from "canvas";
+import { createCanvas, loadImage } from "canvas";
 import { Buffer } from "buffer";
 
 interface WelcomeCardOptions {
@@ -20,7 +20,7 @@ export async function generateWelcomeCard(
   const {
     discordUsername,
     osuUsername,
-    discordAvatarUrl,
+    discordAvatarUrl = "https://i.redd.it/ia970w1gp9wc1.png",
     osuAvatarUrl,
     serverName,
     backgroundColor = {

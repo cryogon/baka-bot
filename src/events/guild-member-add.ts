@@ -1,17 +1,22 @@
-import {
-  EmbedBuilder,
-  Events,
-  GuildMember,
-  TextChannel,
-} from "discord.js";
+import { EmbedBuilder, Events, GuildMember, TextChannel } from "discord.js";
 import { state } from "../states";
 import type { ServerConfig } from "../types";
+import { db } from "../db";
+import { users } from "../db/schema";
+import { eq } from "drizzle-orm";
 
 export const name = Events.GuildMemberAdd;
 export async function execute(member: GuildMember) {
   console.log("New Member Joined", member.user.username);
-  // NOTE: need to add checking, if user joins again and they have already verified once then they don't require to verify again
+
   try {
+    const userExists = await db.query.users.findFirst({
+      where: eq(users.discordId, member.id),
+    });
+    if (userExists) {
+      console.log("Wait this user has already linked their profile somewhere");
+    }
+
     const config = state.getServerConfig(member.guild.id);
     if (!config) {
       console.log(`No configuration found for guild: ${member.guild.name}.`);
