@@ -6,6 +6,7 @@ import { state } from "./states";
 const client: Client<true> = new Client({
   intents: [
     GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildVoiceStates,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
@@ -27,7 +28,7 @@ for (const folder of commandFolders) {
     .filter((file) => file.endsWith(".ts"));
   for (const file of commandFiles) {
     const filePath = path.join(commandsPath, file);
-    const command = require(filePath);
+    const command = await import(filePath);
     // Set a new item in the Collection with the key as the command name and the value as the exported module
     if ("data" in command && "execute" in command) {
       state.setDiscordCommand(command.data.name, command);
@@ -45,7 +46,7 @@ const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.ts'
 
 for (const file of eventFiles) {
 	const filePath = path.join(eventsPath, file);
-	const event = require(filePath);
+	const event = await import(filePath);
 	if (event.once) {
 		client.once(event.name, (...args) => event.execute(...args));
 	} else {

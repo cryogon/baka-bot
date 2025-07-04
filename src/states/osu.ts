@@ -1,7 +1,8 @@
-import { api } from "osu";
+import { OsuApi } from "osu-sdk";
 
-if (!process.env.OSU_API_KEY) {
-  throw new Error("OSU_API_KEY is not set in the environment variables");
-}
+export const osu = new OsuApi({
+  client_id: process.env.OSU_CLIENT_ID || "",
+  client_secret: process.env.OSU_CLIENT_SECRET || "",
+});
 
-export const osuApi = api(process.env.OSU_API_KEY);
+await osu.getClientCredentialsToken(["public"]); // only access publically available data
