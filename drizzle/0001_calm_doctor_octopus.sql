@@ -1,0 +1,2 @@
+ALTER TABLE "users" ADD COLUMN "created_at" text DEFAULT CURRENT_TIMESTAMP NOT NULL;--> statement-breakpoint
+ALTER TABLE "users" ADD COLUMN "updated_at" text DEFAULT CURRENT_TIMESTAMP NOT NULL;
