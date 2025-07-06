@@ -1,0 +1,1 @@
+ALTER TABLE "guild_config" ADD COLUMN "bot_prefix" char;
