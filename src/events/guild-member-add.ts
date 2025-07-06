@@ -2,7 +2,7 @@ import { EmbedBuilder, Events, GuildMember, TextChannel } from "discord.js";
 import { state } from "../states";
 import type { ServerConfig } from "../types";
 import { db } from "../db";
-import { users } from "../db/schema";
+import { guilds, users } from "../db/schema";
 import { eq } from "drizzle-orm";
 
 export const name = Events.GuildMemberAdd;
@@ -10,13 +10,6 @@ export async function execute(member: GuildMember) {
   console.log("New Member Joined", member.user.username);
 
   try {
-    const userExists = await db.query.users.findFirst({
-      where: eq(users.discordId, member.id),
-    });
-    if (userExists) {
-      console.log("Wait this user has already linked their profile somewhere");
-    }
-
     const config = state.getServerConfig(member.guild.id);
     if (!config) {
       console.log(`No configuration found for guild: ${member.guild.name}.`);
@@ -32,6 +25,7 @@ export async function execute(member: GuildMember) {
     const quarantineRole = member.guild.roles.cache.get(
       config.quarantineRoleId
     );
+
     if (!quarantineRole) {
       console.error(`Quarantine role not found in guild: ${member.guild.name}`);
       return;
@@ -56,10 +50,37 @@ export async function execute(member: GuildMember) {
       return;
     }
 
+    const userExists = await db.query.users.findFirst({
+      where: eq(users.discordId, member.id),
+    });
+
+    if (userExists) {
+      console.log(
+        "Wait this user has already linked their profile somewhere. giving them verified role (if available)"
+      );
+      if (config.verifiedRoleId) {
+        const verifiedRole = member.guild.roles.cache.get(
+          config.verifiedRoleId
+        );
+        if (verifiedRole) await member.roles.add(verifiedRole);
+      }
+      return;
+    }
+
     await member.roles.add(quarantineRole);
     console.log(
       `Added quarantine role to ${member.user.tag} in ${member.guild.name}`
     );
+
+    try {
+      await db
+        .insert(guilds)
+        .values({ userId: member.id, guildId: member.guild.id })
+        .onConflictDoNothing();
+    } catch (err) {
+      console.log("Failed to insert user. err:", err);
+      return;
+    }
 
     await sendVerificationMessage(member, config);
   } catch (err: any) {
