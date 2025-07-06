@@ -31,13 +31,22 @@ export const data = new SlashCommandBuilder()
       .setName("verified-role")
       .setDescription("Role to assign after verification (optional)")
       .setRequired(false)
+  )
+  .addStringOption((option) =>
+    option
+      .setName("bot-prefix")
+      .setDescription(
+        "prefix that needs to be attached to command for bot to be able to listen it e.g. `<`"
+      )
+      .setRequired(false)
+      .setMaxLength(1)
   );
 
 export async function execute(interaction: ChatInputCommandInteraction) {
   if (!interaction.guildId) {
     await interaction.reply({
       content: "This command can only be used in a server!",
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
     return;
   }
@@ -45,7 +54,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
   if (!interaction.memberPermissions?.has("Administrator")) {
     await interaction.reply({
       content: "You need Administrator permissions to use this command!",
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
     return;
   }
@@ -56,11 +65,12 @@ export async function execute(interaction: ChatInputCommandInteraction) {
   );
   const welcomeChannel = interaction.options.getChannel("welcome-channel");
   const verifiedRole = interaction.options.getRole("verified-role");
+  const botPrefix = interaction.options.getString("bot-prefix");
 
   if (!quarantineRole || !verificationChannel) {
     await interaction.reply({
       content: "Required options are missing!",
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
     return;
   }
@@ -71,6 +81,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     verificationChannelId: verificationChannel.id,
     welcomeChannelId: welcomeChannel?.id,
     verifiedRoleId: verifiedRole?.id,
+    botPrefix: botPrefix,
   };
 
   try {
@@ -78,8 +89,10 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     await interaction.reply({
       content: `Server configuration saved successfully!\n\n**Quarantine Role:** ${quarantineRole}\n**Verification Channel:** ${verificationChannel}${
         welcomeChannel ? `\n**Welcome Channel:** ${welcomeChannel}` : ""
-      }${verifiedRole ? `\n**Verified Role:** ${verifiedRole}` : ""}`,
-      ephemeral: true,
+      }${verifiedRole ? `\n**Verified Role:** ${verifiedRole}` : ""}${
+        botPrefix ? `\n**Bot Prefix:** ${botPrefix}` : ""
+      }`,
+      flags: MessageFlags.Ephemeral,
     });
   } catch (error) {
     console.error("Error saving server config:", error);
