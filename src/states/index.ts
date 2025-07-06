@@ -1,7 +1,8 @@
 import { Collection } from "discord.js";
 import type { ServerConfig } from "../types";
+import { db } from "../db";
+import { guildConfig } from "../db/schema";
 
-const configFile = Bun.file("server-config.json");
 class StateManager {
   private static instance: StateManager;
   private commands = new Collection();
@@ -28,14 +29,17 @@ class StateManager {
 
   async setServerConfig(config: ServerConfig) {
     this.serverConfigs.set(config.guildId, config);
-    // TODO: Replace it with db later
-    if (await configFile.exists()) {
-      const oldData = (await configFile.json()) as any;
-      oldData[config.guildId] = config;
-      Bun.write(configFile, JSON.stringify(oldData));
-      return;
+    try {
+      const { guildId: _, ...rest } = config;
+      await db
+        .insert(guildConfig)
+        .values(config)
+        .onConflictDoUpdate({ set: rest, target: guildConfig.guildId });
+      return true;
+    } catch (err) {
+      console.error("Failed to upload config. err:", err);
+      return false;
     }
-    Bun.write(configFile, JSON.stringify({ [config.guildId]: config }));
   }
 
   getServerConfig(guildId: string) {
@@ -43,9 +47,13 @@ class StateManager {
   }
 
   async loadServerConfigs() {
-    const file = (await configFile.json()) as any;
-    for (const key in file) {
-      this.serverConfigs.set(key, file[key]);
+    // not using try/catch since I want bot to crash if it can't load the configs
+    const configs = await db.query.guildConfig.findMany({
+      columns: { id: false, createdAt: false, updatedAt: false },
+    });
+
+    for (const config of configs) {
+      this.serverConfigs.set(config.guildId, config);
     }
   }
 }
