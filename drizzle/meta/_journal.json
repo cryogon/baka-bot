@@ -36,6 +36,13 @@
       "when": 1751780952935,
       "tag": "0004_bent_miracleman",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1752323786598,
+      "tag": "0005_wooden_infant_terrible",
+      "breakpoints": true
     }
   ]
 }
