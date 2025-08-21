@@ -6,6 +6,8 @@ import { safeAwait } from "../utils/safe-await";
 import { Colors } from "discord.js";
 import { secondsToLengthString } from "../utils/seconds-to-length-string";
 import { getScore } from "../utils/get-score";
+import { getErrorEmbed } from "../embeds/error";
+import { getUserFriendlyModeName } from "../utils/get-friendly-mode-name";
 
 type Score = Awaited<ReturnType<typeof osu.users.getUserScores>>[0];
 
@@ -93,17 +95,4 @@ async function getScoreEmbed(score: Score, mode: Ruleset) {
   ifFcResult.free();
 
   return embed;
-}
-
-function getErrorEmbed(errMsg: string = "Something went wrong dawg") {
-  return new EmbedBuilder({ description: errMsg });
-}
-
-function getUserFriendlyModeName(mode: Ruleset) {
-  switch (mode) {
-    case "fruits":
-      return "ctb";
-    default:
-      return mode;
-  }
 }

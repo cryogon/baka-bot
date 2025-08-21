@@ -1,6 +1,7 @@
 import type { Message } from "discord.js";
 import { state } from "../states";
 import { getRecentScore } from "../osu-commands/recent-score";
+import { getOsuProfile } from "../osu-commands/profile";
 
 export async function handleOsuCommands(message: Message) {
   if (!message.guild) return;
@@ -14,6 +15,10 @@ export async function handleOsuCommands(message: Message) {
   // temp for test
   if (msg === `${prefix}rs`) {
     const embed = await getRecentScore(message.author.id);
+    channel.send({ embeds: [embed] });
+  }
+  if (msg === `${prefix}osu`) {
+    const embed = await getOsuProfile(message.author.id);
     channel.send({ embeds: [embed] });
   }
 }
