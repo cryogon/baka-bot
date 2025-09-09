@@ -17,6 +17,10 @@ export async function getOsuProfile(discordId: string, mode: Ruleset = "osu") {
     return getErrorEmbed();
   }
 
+  const teamText = profile.team
+    ? `**Team**: [${profile.team.short_name}](https://osu.ppy.sh/teams/${profile.team.id})`
+    : "";
+    
   const embed = new EmbedBuilder({
     title: `${gameMode}! Profile for ${profile.username}`,
     url: `https://osu.ppy.sh/u/${profile.id}`,
@@ -28,9 +32,7 @@ export async function getOsuProfile(discordId: string, mode: Ruleset = "osu") {
     ▸ **Peak Rank**: #${
       profile.rank_highest?.rank
     } archeived <t:${getUnixTimestamp(profile.rank_highest?.updated_at)}:R>
-    ▸ **Level**: ${stats.level.current} + ${stats.level.progress}% **Team**: [${
-      profile.team.short_name
-    }](https://osu.ppy.sh/teams/${profile.team.id})
+    ▸ **Level**: ${stats.level.current} + ${stats.level.progress}% ${teamText}
     ▸ **PP**: ${stats.pp} **Acc**: ${stats.hit_accuracy.toFixed(2)}%
     ▸ **Playcount**: ${stats.play_count} (${Math.round(
       (stats.play_time || 0) / (60 * 60)

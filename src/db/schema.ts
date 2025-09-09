@@ -20,6 +20,7 @@ export const users = pgTable("users", {
   discordId: text("discord_id").notNull().unique(),
   // You can use { mode: "bigint" } if numbers are exceeding js number limitations
   osuId: bigint("osu_id", { mode: "number" }).notNull(),
+  osuUsername: text("osu_username").notNull(),
   createdAt: text("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),

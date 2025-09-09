@@ -96,7 +96,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     try {
       await db
         .insert(users)
-        .values({ discordId: interaction.user.id, osuId: user.id })
+        .values({ discordId: interaction.user.id, osuId: user.id, osuUsername })
         .onConflictDoUpdate({
           target: users.discordId,
           set: { osuId: user.id },
