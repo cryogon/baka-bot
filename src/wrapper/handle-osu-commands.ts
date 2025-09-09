@@ -2,6 +2,7 @@ import type { Message } from "discord.js";
 import { state } from "../states";
 import { getRecentScore } from "../osu-commands/recent-score";
 import { getOsuProfile } from "../osu-commands/profile";
+import { commandParser } from "../utils/command-parser";
 
 export async function handleOsuCommands(message: Message) {
   if (!message.guild) return;
@@ -12,34 +13,33 @@ export async function handleOsuCommands(message: Message) {
   const msg = message.content.trim();
   const prefix = config.botPrefix;
   if (!msg.startsWith(prefix)) return;
-  const chunks = msg.split(" ");
+  const command = commandParser(msg);
 
-  if (msg.startsWith(`${prefix}rs`)) {
-    if (chunks.length <= 1) {
+  if (command.command === "rs") {
+    if (!command.user) {
       const embed = await getRecentScore(message.author.id);
       return channel.send({ embeds: [embed] });
     }
-
-    const param = chunks[1] as string;
-    console.log("Param", param, chunks);
-    if (param.startsWith("<@")) {
-      const discordId = param.substring(2, param.length - 1);
-      const embed = await getRecentScore(discordId);
-      return channel.send({ embeds: [embed] });
-    }
-
-    // username
-    if (Number.isNaN(Number(param))) {
-      const embed = await getRecentScore(param, "osu", "osuUsername");
-      return channel.send({ embeds: [embed] });
-    }
-
-    const embed = await getRecentScore(param, "osu", "osuId");
+    const embed = await getRecentScore(
+      command.user.value,
+      "osu",
+      command.user.type
+    );
     return channel.send({ embeds: [embed] });
   }
 
-  if (msg.startsWith(`${prefix}osu`)) {
-    const embed = await getOsuProfile(message.author.id);
-    channel.send({ embeds: [embed] });
+  if (command.command === "osu") {
+    if (!command.user) {
+      const embed = await getOsuProfile(message.author.id);
+      return channel.send({ embeds: [embed] });
+    }
+    const embed = await getOsuProfile(
+      command.user.value,
+      "osu",
+      command.user.type
+    );
+    return channel.send({ embeds: [embed] });
   }
+  
+  
 }

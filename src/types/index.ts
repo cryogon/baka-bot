@@ -1,3 +1,5 @@
+import type { osu } from "../states/osu";
+
 export interface ServerConfig {
   guildId: string;
   quarantineRoleId: string;
@@ -8,3 +10,5 @@ export interface ServerConfig {
 }
 
 export type Ruleset = "osu" | "mania" | "taiko" | "fruits";
+export type Score = Awaited<ReturnType<typeof osu.users.getUserScores>>[0];
+export type Type = "discordId" | "osuId" | "osuUsername";

@@ -1,6 +1,6 @@
 import { EmbedBuilder } from "@discordjs/builders";
 import { osu } from "../states/osu";
-import type { Ruleset } from "../types";
+import type { Ruleset, Score, Type } from "../types";
 import { getOsuId, getOsuIdWithUsername } from "../utils/get-osu-id";
 import { safeAwait } from "../utils/safe-await";
 import { Colors } from "discord.js";
@@ -9,15 +9,11 @@ import { getScore } from "../utils/get-score";
 import { getErrorEmbed } from "../embeds/error";
 import { getUserFriendlyModeName } from "../utils/get-friendly-mode-name";
 
-type Score = Awaited<ReturnType<typeof osu.users.getUserScores>>[0];
-type Type = "discordId" | "osuId" | "osuUsername";
-
 export async function getRecentScore(
   param: string,
   mode: Ruleset = "osu",
   type: Type = "discordId"
 ) {
-  console.log("Recent Score Args", param, mode, type);
   const osuId =
     type === "discordId"
       ? await getOsuId(param)

@@ -1,15 +1,26 @@
 import { EmbedBuilder } from "discord.js";
 import { getErrorEmbed } from "../embeds/error";
 import { osu } from "../states/osu";
-import type { Ruleset } from "../types";
+import type { Ruleset, Type } from "../types";
 import { getUserFriendlyModeName } from "../utils/get-friendly-mode-name";
-import { getOsuId } from "../utils/get-osu-id";
+import { getOsuId, getOsuIdWithUsername } from "../utils/get-osu-id";
 
-export async function getOsuProfile(discordId: string, mode: Ruleset = "osu") {
-  const osuId = await getOsuId(discordId);
+export async function getOsuProfile(
+  discordId: string,
+  mode: Ruleset = "osu",
+  type: Type = "discordId"
+) {
+  const osuId =
+    type === "discordId"
+      ? await getOsuId(discordId)
+      : type === "osuUsername"
+      ? await getOsuIdWithUsername(discordId)
+      : Number(discordId);
+
   if (!osuId) {
     return getErrorEmbed("Couldn't find osu id for discord user: " + discordId);
   }
+  
   const profile = await osu.users.getUser(osuId, { mode, key: "id" });
   const gameMode = getUserFriendlyModeName(mode);
   const stats = profile.statistics;
@@ -20,7 +31,7 @@ export async function getOsuProfile(discordId: string, mode: Ruleset = "osu") {
   const teamText = profile.team
     ? `**Team**: [${profile.team.short_name}](https://osu.ppy.sh/teams/${profile.team.id})`
     : "";
-    
+
   const embed = new EmbedBuilder({
     title: `${gameMode}! Profile for ${profile.username}`,
     url: `https://osu.ppy.sh/u/${profile.id}`,
