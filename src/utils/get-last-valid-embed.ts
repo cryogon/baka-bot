@@ -3,7 +3,7 @@ import type { Message } from "discord.js";
 export async function getBeatmapIdFromConversation(message: Message) {
   const msg = await getLastValidEmbed(message);
   const embed = msg?.embeds?.[0];
-
+  console.log("Embed", embed);
   if (!msg || !embed || !embed.url) {
     return null;
   }
@@ -14,7 +14,7 @@ export async function getBeatmapIdFromConversation(message: Message) {
     return null;
   }
 
-  return beatmapId;
+  return Number(beatmapId);
 }
 
 /**
