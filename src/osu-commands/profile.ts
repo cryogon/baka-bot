@@ -20,8 +20,8 @@ export async function getOsuProfile(
   if (!osuId) {
     return getErrorEmbed("Couldn't find osu id for discord user: " + discordId);
   }
-  
-  const profile = await osu.users.getUser(osuId, { mode, key: "id" });
+
+  const profile = await osu.users.getUser(osuId, { query: { key: "id" } });
   const gameMode = getUserFriendlyModeName(mode);
   const stats = profile.statistics;
   if (!stats) {

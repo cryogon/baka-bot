@@ -22,11 +22,12 @@ export async function getRecentScore(
   }
 
   const [err, data] = await safeAwait(() =>
-    osu.users.getUserScores(osuId, {
-      mode,
-      type: "recent",
-      limit: 1,
-      include_fails: true,
+    osu.users.getUserScores(osuId, "recent", {
+      query: {
+        mode,
+        limit: 1,
+        include_fails: true,
+      },
     })
   );
 

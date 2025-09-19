@@ -20,13 +20,13 @@ export async function checkScore(
     return getErrorEmbed("Couldn't find osu id for discord user: " + discordId);
   }
 
-  const { scores } = await osu.beatmaps.getUserBeatmapScores(beatmapId, osuId);
+  const scores = await osu.beatmaps.getBeatmapUserScoresV2(beatmapId, osuId);
   if (!scores.length) return getErrorEmbed("No Scores Found");
   if (scores.length === 1) {
     const score = scores[0] as unknown as Score;
     return await getScoreEmbed(score);
   }
-  return getErrorEmbed("No Supported Yet");
+  return getErrorEmbed("Not Supported Yet");
 }
 
 function getUnixTimestamp(time?: string) {
