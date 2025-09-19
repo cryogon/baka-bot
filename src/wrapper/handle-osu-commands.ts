@@ -3,6 +3,8 @@ import { state } from "../states";
 import { getRecentScore } from "../osu-commands/recent-score";
 import { getOsuProfile } from "../osu-commands/profile";
 import { commandParser } from "../utils/command-parser";
+import { getBeatmapIdFromConversation } from "../utils/get-last-valid-embed";
+import { getErrorEmbed } from "../embeds/error";
 
 export async function handleOsuCommands(message: Message) {
   if (!message.guild) return;
@@ -40,6 +42,10 @@ export async function handleOsuCommands(message: Message) {
     );
     return channel.send({ embeds: [embed] });
   }
-  
-  
+
+  if (command.command === "c") {
+    const beatmapId = await getBeatmapIdFromConversation(message);
+    if (!beatmapId) return getErrorEmbed("Failed to find the beatmap");
+    
+  }
 }
