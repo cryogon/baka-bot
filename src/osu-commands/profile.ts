@@ -48,7 +48,7 @@ export async function getOsuProfile(
     ▸ **Playcount**: ${stats.play_count} (${Math.round(
       (stats.play_time || 0) / (60 * 60)
     )})
-    **Ranks**: <:rankSSH:1419577182237233204> ${
+    ▸ **Ranks**: <:rankSSH:1419577182237233204> ${
       stats.grade_counts.ssh
     } <:rankSS:1419577179838091337> ${
       stats.grade_counts.ss
