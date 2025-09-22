@@ -1,6 +1,6 @@
 import { Colors, EmbedBuilder } from "discord.js";
 import { getErrorEmbed } from "./error";
-import type { Ruleset, Score } from "../types";
+import type { Score } from "../types";
 import { getScore } from "../utils/get-score";
 import { getUserFriendlyModeName } from "../utils/get-friendly-mode-name";
 import { secondsToLengthString } from "../utils/seconds-to-length-string";

@@ -48,7 +48,15 @@ export async function getOsuProfile(
     ▸ **Playcount**: ${stats.play_count} (${Math.round(
       (stats.play_time || 0) / (60 * 60)
     )})
-    // Rank soon tm
+    **Ranks**: <:rankSSH:1419577182237233204> ${
+      stats.grade_counts.ssh
+    } <:rankSS:1419577179838091337> ${
+      stats.grade_counts.ss
+    } <:rankSH:1419577177619304540> ${
+      stats.grade_counts.sh
+    } <:rankS:1419577175027482685> ${
+      stats.grade_counts.s
+    } <:rankA:1419577109747073095> ${stats.grade_counts.a}
     `,
   });
   return embed;
