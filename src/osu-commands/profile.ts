@@ -4,6 +4,8 @@ import { osu } from "../states/osu";
 import type { Ruleset, Type } from "../types";
 import { getUserFriendlyModeName } from "../utils/get-friendly-mode-name";
 import { getOsuId, getOsuIdWithUsername } from "../utils/get-osu-id";
+import { ranks } from "../constants";
+import { getUnixTimestamp } from "../utils/unix-timestamp";
 
 export async function getOsuProfile(
   discordId: string,
@@ -48,22 +50,12 @@ export async function getOsuProfile(
     ▸ **Playcount**: ${stats.play_count} (${Math.round(
       (stats.play_time || 0) / (60 * 60)
     )})
-    ▸ **Ranks**: <:rankSSH:1419577182237233204> ${
-      stats.grade_counts.ssh
-    } <:rankSS:1419577179838091337> ${
+    ▸ **Ranks**: ${ranks.SSH} ${stats.grade_counts.ssh} ${ranks.SS}> ${
       stats.grade_counts.ss
-    } <:rankSH:1419577177619304540> ${
-      stats.grade_counts.sh
-    } <:rankS:1419577175027482685> ${
-      stats.grade_counts.s
-    } <:rankA:1419577109747073095> ${stats.grade_counts.a}
+    } ${ranks.SH} ${stats.grade_counts.sh} ${ranks.S} ${stats.grade_counts.s} ${
+      ranks.A
+    } ${stats.grade_counts.a}
     `,
   });
   return embed;
-}
-
-function getUnixTimestamp(time?: string) {
-  if (!time) return 0;
-  const date = new Date(time);
-  return Math.floor(date.getTime() / 1000);
 }

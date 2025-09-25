@@ -18,7 +18,7 @@ export async function getOsuIdWithUsername(username: string) {
   );
   // if not available in db then try to fetch from osu api
   if (err || !data) {
-    const user = await osu.users.getUser(username, { key: "username" });
+    const user = await osu.users.getUser(username);
     if (!user) return null;
     return user.id;
   }

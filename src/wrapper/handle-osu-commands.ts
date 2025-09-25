@@ -3,7 +3,7 @@ import { state } from "../states";
 import { getRecentScore } from "../osu-commands/recent-score";
 import { getOsuProfile } from "../osu-commands/profile";
 import { commandParser } from "../utils/command-parser";
-import { getBeatmapIdFromConversation } from "../utils/get-last-valid-embed";
+import { getBeatmapFromConversation } from "../utils/get-last-valid-embed";
 import { getErrorEmbed } from "../embeds/error";
 import { checkScore } from "../osu-commands/check";
 
@@ -45,15 +45,15 @@ export async function handleOsuCommands(message: Message) {
   }
 
   if (command.command === "c") {
-    const beatmapId = await getBeatmapIdFromConversation(message);
-    if (!beatmapId) return getErrorEmbed("Failed to find the beatmap");
+    const beatmap = await getBeatmapFromConversation(message);
+    if (!beatmap) return getErrorEmbed("Failed to find the beatmap");
     if (!command.user) {
-      const embed = await checkScore(message.author.id, beatmapId);
+      const embed = await checkScore(message.author.id, beatmap);
       return channel.send({ embeds: [embed] });
     }
     const embed = await checkScore(
       command.user.value,
-      beatmapId,
+      beatmap,
       command.user.type
     );
     return channel.send({ embeds: [embed] });

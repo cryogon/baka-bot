@@ -1,20 +1,25 @@
 import type { Message } from "discord.js";
 
-export async function getBeatmapIdFromConversation(message: Message) {
+export async function getBeatmapFromConversation(message: Message) {
   const msg = await getLastValidEmbed(message);
   const embed = msg?.embeds?.[0];
-  console.log("Embed", embed);
+
   if (!msg || !embed || !embed.url) {
     return null;
   }
 
-  const beatmapId = embed.url.split("/").at(-1);
+  const beatmap = {
+    id: Number(embed.url.split("/").at(-1) || "NA"),
+    title: embed.title,
+    imageUrl: embed.image?.url,
+    url: embed.url,
+  };
 
-  if (!beatmapId || Number.isNaN(beatmapId)) {
+  if (Number.isNaN(beatmap.id)) {
     return null;
   }
 
-  return Number(beatmapId);
+  return beatmap;
 }
 
 /**

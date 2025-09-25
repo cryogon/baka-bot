@@ -3,7 +3,7 @@ import type { Ruleset, Score, Type } from "../types";
 import { getOsuId, getOsuIdWithUsername } from "../utils/get-osu-id";
 import { safeAwait } from "../utils/safe-await";
 import { getErrorEmbed } from "../embeds/error";
-import { getScoreEmbed } from "../embeds/single-score";
+import { getRecentScoreEmbed } from "../embeds/single-score";
 
 export async function getRecentScore(
   param: string,
@@ -38,5 +38,5 @@ export async function getRecentScore(
 
   if (!data.length) return getErrorEmbed("No recent score available");
   const recentScore = data[0] as Score;
-  return getScoreEmbed(recentScore);
+  return getRecentScoreEmbed(recentScore);
 }

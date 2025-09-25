@@ -4,8 +4,9 @@ import type { Score } from "../types";
 import { getScore } from "../utils/get-score";
 import { getUserFriendlyModeName } from "../utils/get-friendly-mode-name";
 import { secondsToLengthString } from "../utils/seconds-to-length-string";
+import { ranks } from "../constants";
 
-export async function getScoreEmbed(score: Score) {
+export async function getRecentScoreEmbed(score: Score) {
   if (
     !score.beatmap ||
     !score.beatmapset ||
@@ -15,6 +16,7 @@ export async function getScoreEmbed(score: Score) {
     return getErrorEmbed();
 
   const { result, ifFcResult } = await getScore(score);
+  // TODO: Replace F Rank with Icon
   const embed = new EmbedBuilder({
     author: {
       name: `Recent ${getUserFriendlyModeName(score.mode)} score for ${
@@ -29,11 +31,11 @@ export async function getScoreEmbed(score: Score) {
       score.beatmap.difficulty_rating
     }★]`,
     url: score.beatmap?.url,
-    description: `-> ${score.rank} | \`${result.pp.toFixed(
+    description: `-> ${
+      score.rank !== "F" ? ranks[score.rank] : score.rank
+    } | \`${result.pp.toFixed(2)}PP\` (${ifFcResult.pp.toFixed(
       2
-    )}PP\` (${ifFcResult.pp.toFixed(2)}PP for fc) | \`${(
-      (score.accuracy || 0) * 100
-    ).toFixed(
+    )}PP for fc) | \`${((score.accuracy || 0) * 100).toFixed(
       2
     )}\` \n-> <:length:1391315456140251216> \`${secondsToLengthString(
       score.beatmap.total_length || 0
