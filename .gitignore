@@ -12,7 +12,6 @@ dist
 .env.test.local
 .env.production.local
 .env.local
-## Temp Files
-server-config.json
 # Finder (MacOS) folder config
 .DS_Store
+test.ts

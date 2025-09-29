@@ -1,6 +1,7 @@
 {
     "name": "baka-bot",
-    "module": "index.ts",
+    "icon": "",
+    "module": "src/index.ts",
     "type": "module",
     "private": true,
     "scripts": {
@@ -16,14 +17,15 @@
         "drizzle-kit": "^0.31.4"
     },
     "peerDependencies": {
-        "typescript": "^5"
+        "typescript": "^5.8.3"
     },
     "dependencies": {
         "@neondatabase/serverless": "^1.0.1",
-        "canvas": "^3.1.2",
-        "discord.js": "^14.21.0",
-        "dotenv": "^17.0.1",
-        "drizzle-orm": "^0.44.2",
-        "osu-sdk": "^0.1.0"
+        "canvas": "^3.2.0",
+        "discord.js": "^14.22.1",
+        "dotenv": "^17.2.1",
+        "drizzle-orm": "^0.44.4",
+        "osu-web.js": "^2.6.0",
+        "rosu-pp-js": "^3.1.0"
     }
 }

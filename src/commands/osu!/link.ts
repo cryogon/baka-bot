@@ -77,7 +77,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     }
 
     const osuUsername = interaction.options.getString("username", true);
-    await interaction.deferReply();
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const user = await osu.users.getUser(osuUsername, { key: "username" });
     if (!user || !user.username) {
@@ -96,9 +96,9 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     try {
       await db
         .insert(users)
-        .values({ discordId: interaction.user.id, osuId: user.id })
+        .values({ discordId: interaction.user.id, osuId: user.id, osuUsername })
         .onConflictDoUpdate({
-          target: [users.discordId, users.osuId],
+          target: users.discordId,
           set: { osuId: user.id },
         });
     } catch (err) {
@@ -121,17 +121,6 @@ export async function execute(interaction: ChatInputCommandInteraction) {
       await interaction.member.roles.remove(config.quarantineRoleId);
       config.verifiedRoleId &&
         (await interaction.member.roles.add(config.verifiedRoleId));
-    }
-
-    try {
-      await db
-        .insert(guilds)
-        .values({ userId: interaction.user.id, guildId: interaction.guild.id })
-        .onConflictDoNothing();
-    } catch (err) {
-      console.log("Failed to insert user. err:", err);
-      await interaction.editReply(`something went wrong`);
-      return;
     }
 
     // only send welcome image if user links for the first time

@@ -22,6 +22,27 @@
       "when": 1751615744844,
       "tag": "0002_lumpy_maginty",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1751698660665,
+      "tag": "0003_slimy_hex",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1751780952935,
+      "tag": "0004_bent_miracleman",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1752323786598,
+      "tag": "0005_wooden_infant_terrible",
+      "breakpoints": true
     }
   ]
 }
