@@ -1,13 +1,13 @@
-import { osu } from "../states/osu";
+import type { UserBestScore, UserScore } from "osu-web.js";
 import * as rosu from "rosu-pp-js";
 
-type Score = Awaited<ReturnType<typeof osu.users.getUserScores>>[0];
+const FREE_MEMORY_IN = 10; // in sec
 
 /**
  * can Throw
  * @param score
  */
-export async function getScore(score: Score) {
+export async function getScore(score: UserScore | UserBestScore) {
   if (!score || !score.beatmap) throw new Error("No Recent Score Found");
   const response = await fetch(`https://osu.ppy.sh/osu/${score.beatmap.id}`);
   const beatmapData = await response.arrayBuffer();
@@ -39,5 +39,20 @@ export async function getScore(score: Score) {
     n50: score.statistics.meh, // Okay hits
   });
   const ifFcResult = ifFcPerf.calculate(beatmap);
-  return { result, ifFcResult };
+
+  const maxPerf = new rosu.Performance({
+    mods: score.mods || [], // Mod combination as bitwise value
+    accuracy: score.accuracy * 100, // Accuracy as percentage (0-100)
+    combo: score.max_combo, // Max combo achieved
+    n300: result.difficulty.maxCombo,
+  });
+  const maxResult = maxPerf.calculate(beatmap);
+  // free memory after some time
+  setTimeout(() => {
+    result.free();
+    ifFcResult.free();
+    maxResult.free();
+  }, FREE_MEMORY_IN * 1000);
+
+  return { result, ifFcResult, maxResult };
 }
